@@ -1,4 +1,5 @@
-﻿import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+﻿// @ts-ignore
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 interface AuthState {
     verifier: string,

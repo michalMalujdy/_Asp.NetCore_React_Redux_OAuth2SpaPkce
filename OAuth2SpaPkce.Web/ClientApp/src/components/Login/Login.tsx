@@ -1,11 +1,15 @@
 ﻿import React from "react";
+import {connect} from "react-redux";
+import {setVerifier, setChallenge} from '../../store/authSlice';
 
-export default class Login extends React.PureComponent {
-
+class Login extends React.PureComponent<LoginProps> {
 
     async componentDidMount() {
         let verifier = this.getVerifier();
+        this.props.setVerifier(verifier);
+
         let challenge = await this.getChallenge(verifier);
+        this.props.setChallenge(challenge);
     }
 
     render() {
@@ -46,3 +50,24 @@ export default class Login extends React.PureComponent {
         return this.base64urlencode(challenge);
     }
 }
+
+interface LoginProps {
+    verifier: string,
+    challenge: string,
+    setVerifier: (verifier: string) => void,
+    setChallenge: (challenge: string) => void
+}
+
+const mapStateToProps = (state: any) => {
+    return {
+        verifier: state.auth.verifier,
+        challenge: state.auth.challenge
+    }
+};
+
+const mapDispatchToProps = {
+    setVerifier,
+    setChallenge
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
