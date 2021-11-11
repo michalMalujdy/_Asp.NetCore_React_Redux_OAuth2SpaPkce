@@ -1,32 +1,34 @@
 ﻿// @ts-ignore
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-interface AuthState {
-    verifier: string,
-    challenge: string
-}
-
 const initialState: AuthState = {
-    verifier: '',
-    challenge: ''
+    code: {
+        verifier: '',
+        challenge: ''
+    }
 };
 
 const authSlice = createSlice({
     name: 'auth',
     initialState: initialState,
     reducers: {
-        setVerifier(state: any, action: PayloadAction<string>) {
-            state.verifier = action.payload;
+        setCode(state: any, action: PayloadAction<Code>) {
+            state.code = action.payload;
         },
-        setChallenge(state: any, action: PayloadAction<string>) {
-            state.challenge = action.payload;
-        },
-        clear(state: any) {
-            state.verifier = null;
-            state.challenge = null;
+        clearCode(state: any) {
+            state = initialState;
         }
     }
 });
 
-export const { setVerifier, setChallenge, clear } = authSlice.actions;
+export interface AuthState {
+    code: Code
+}
+
+export interface Code {
+    verifier: string,
+    challenge: string
+}
+
+export const { setCode, clearCode } = authSlice.actions;
 export default authSlice.reducer;
