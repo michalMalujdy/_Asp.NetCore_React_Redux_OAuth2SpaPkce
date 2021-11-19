@@ -1,23 +1,39 @@
 ﻿import React from "react";
 import {connect} from "react-redux";
-import {setCode, Code} from '../../store/authSlice';
+import {Code, setCode, setUrlState} from '../../../store/authSlice';
+import Loader from "../../Loader/Loader";
 
 class Login extends React.PureComponent<LoginProps> {
 
     async componentDidMount() {
-        let verifier = this.getVerifier();
+        let verifier = this.getStrongRandomValue();
         let challenge = await this.getChallenge(verifier);
+        let state = this.getStrongRandomValue();
 
         this.props.setCode({
             verifier, challenge
         });
+
+        this.props.setUrlState(state);
+
+        const url = 'https://dev-ykfj37bm.us.auth0.com/authorize?' +
+            'response_type=code&' +
+            `code_challenge=${challenge}&` +
+            'code_challenge_method=S256&' +
+            'client_id=gxrNnJJckTJmeKYTK6GplVtEOJ0Drd9O&' +
+            'redirect_uri=https://localhost:5001/auth/redirect&' +
+            'scope=profile,email&' +
+            'audience=https://dev-ykfj37bm.us.auth0.com/api/v2/&' +
+            `state=${state}`;
+
+        window.location.replace(url);
     }
 
     render() {
-        return (<>Logging in</>);
+        return <Loader/>
     }
 
-    private getVerifier(): string {
+    private getStrongRandomValue(): string {
         const array = new Uint32Array(56 / 2);
         window.crypto.getRandomValues(array);
         return Array.from(array, Login.dec2hex).join('');
@@ -55,18 +71,17 @@ class Login extends React.PureComponent<LoginProps> {
 interface LoginProps {
     verifier: string,
     challenge: string,
-    setCode: (code: Code) => void;
+    setCode: (code: Code) => void,
+    setUrlState: (urlState: string) => void;
 }
 
-const mapStateToProps = (state: any) => {
-    return {
-        verifier: state.auth.verifier,
-        challenge: state.auth.challenge
-    }
+const mapStateToProps = (_: any) => {
+    return {}
 };
 
 const mapDispatchToProps = {
-    setCode
+    setCode,
+    setUrlState
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

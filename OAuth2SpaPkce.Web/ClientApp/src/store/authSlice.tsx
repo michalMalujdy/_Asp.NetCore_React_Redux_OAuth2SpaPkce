@@ -5,7 +5,8 @@ const initialState: AuthState = {
     code: {
         verifier: '',
         challenge: ''
-    }
+    },
+    urlState: ''
 };
 
 const authSlice = createSlice({
@@ -15,14 +16,18 @@ const authSlice = createSlice({
         setCode(state: any, action: PayloadAction<Code>) {
             state.code = action.payload;
         },
-        clearCode(state: any) {
+        setUrlState(state: any, action: PayloadAction<string>) {
+            state.urlState = action.payload;
+        },
+        clear(state: any) {
             state = initialState;
         }
     }
 });
 
 export interface AuthState {
-    code: Code
+    code: Code,
+    urlState: string
 }
 
 export interface Code {
@@ -30,5 +35,5 @@ export interface Code {
     challenge: string
 }
 
-export const { setCode, clearCode } = authSlice.actions;
+export const { setCode, setUrlState, clear } = authSlice.actions;
 export default authSlice.reducer;
