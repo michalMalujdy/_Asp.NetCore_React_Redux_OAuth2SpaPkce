@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {Code, clear} from "../../../store/authSlice";
 import Loader from "../../Loader/Loader";
 import axios from "axios";
+import qs from 'qs';
 
 class Redirect extends React.Component<RedirectProps, RedirectState> {
 
@@ -21,38 +22,41 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
         const urlState = query.get('state');
         const urlCode = query.get('code');
 
-        const isCsrfTokenValid = state === urlState;
-        this.setState({
-            ...this.state,
-            isCsrfTokenValid: isCsrfTokenValid
-        });
-
-        if (!isCsrfTokenValid) {
-            this.props.clear();
-            return;
-        }
-
-        console.log(codeVerifier);
-        console.log(urlCode)
-
-        // const options: any = {
-        //     method: 'POST',
-        //     url: 'https://dev-ykfj37bm.us.auth0.com/oauth/token',
-        //     headers: {'content-type': 'application/x-www-form-urlencoded'},
-        //     data: {
-        //         grant_type: 'authorization_code',
-        //         client_id: 'gxrNnJJckTJmeKYTK6GplVtEOJ0Drd9O',
-        //         code_verifier: codeVerifier,
-        //         code: urlCode,
-        //         redirect_uri: 'https://localhost:5001/auth/redirect'
-        //     }
-        // };
-        //
-        // axios.request(options).then((response) => {
-        //     console.log(response.data);
-        // }).catch((error) => {
-        //     console.log('error from auth0: ' + error);
+        // const isCsrfTokenValid = state === urlState;
+        // this.setState({
+        //     ...this.state,
+        //     isCsrfTokenValid: isCsrfTokenValid
         // });
+        //
+        // if (!isCsrfTokenValid) {
+        //     this.props.clear();
+        //     return;
+        // }
+
+        console.log('code_verifier: ' + codeVerifier);
+        console.log("challenge: " + localStorage.getItem('challenge'));
+        console.log('code: ' + urlCode)
+
+        const data = {
+            grant_type: 'authorization_code',
+            client_id: 'gxrNnJJckTJmeKYTK6GplVtEOJ0Drd9O',
+            code_verifier: 'ksqcotqzkphnbsoyosbuzcpgdovafyrvtffgospxxxemhksfj',
+            code: urlCode,
+            redirect_uri: 'https://localhost:5001/auth/redirect'
+        };
+
+        const options: any = {
+            method: 'POST',
+            url: 'https://dev-ykfj37bm.us.auth0.com/oauth/token',
+            headers: {'content-type': 'application/x-www-form-urlencoded'},
+            data: qs.stringify(data)
+        };
+
+        axios.request(options).then((response) => {
+            console.log(response.data);
+        }).catch((error) => {
+            console.log('error from auth0: ' + error);
+        });
     }
 
     render() {
