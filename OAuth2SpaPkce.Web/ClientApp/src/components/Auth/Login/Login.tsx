@@ -10,6 +10,10 @@ class Login extends React.PureComponent<LoginProps> {
         let challenge = await this.getChallenge(verifier);
         let state = this.getStrongRandomValue();
 
+        localStorage.setItem('verifier', verifier);
+        localStorage.setItem('challenge', challenge);
+        localStorage.setItem('state', state);
+
         this.props.setCode({
             verifier, challenge
         });
