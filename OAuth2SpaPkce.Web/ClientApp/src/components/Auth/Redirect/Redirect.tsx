@@ -22,16 +22,16 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
         const urlState = query.get('state');
         const urlCode = query.get('code');
 
-        // const isCsrfTokenValid = state === urlState;
-        // this.setState({
-        //     ...this.state,
-        //     isCsrfTokenValid: isCsrfTokenValid
-        // });
-        //
-        // if (!isCsrfTokenValid) {
-        //     this.props.clear();
-        //     return;
-        // }
+        const isCsrfTokenValid = state === urlState;
+        this.setState({
+            ...this.state,
+            isCsrfTokenValid: isCsrfTokenValid
+        });
+
+        if (!isCsrfTokenValid) {
+            this.props.clear();
+            return;
+        }
 
         console.log('code_verifier: ' + codeVerifier);
         console.log("challenge: " + localStorage.getItem('challenge'));
@@ -40,7 +40,7 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
         const data = {
             grant_type: 'authorization_code',
             client_id: 'gxrNnJJckTJmeKYTK6GplVtEOJ0Drd9O',
-            code_verifier: 'ksqcotqzkphnbsoyosbuzcpgdovafyrvtffgospxxxemhksfj',
+            code_verifier: codeVerifier,
             code: urlCode,
             redirect_uri: 'https://localhost:5001/auth/redirect'
         };

@@ -2,30 +2,21 @@
 import {connect} from "react-redux";
 import {Code, setCode, setUrlState} from '../../../store/authSlice';
 import Loader from "../../Loader/Loader";
-import {randomBytes} from "crypto";
 
 class Login extends React.PureComponent<LoginProps> {
 
     async componentDidMount() {
-        // let verifier = this.getStrongRandomValue();
-        // let challenge = await this.getChallenge(verifier);
-        let verifier = 'abcdefghijklmnoprst';
-        let challenge = '4f424715079a9dad2067ce15f2d7a24ece588614784c67ae8a0a8714f0ae024b';
+        let verifier = this.getStrongRandomValue();
+        let challenge = await this.getChallenge(verifier);
         let state = this.getStrongRandomValue();
 
         localStorage.setItem('verifier', verifier);
         localStorage.setItem('challenge', challenge);
         localStorage.setItem('state', state);
 
-        this.props.setCode({
-            verifier, challenge
-        });
-
-        this.props.setUrlState(state);
-
         const url = 'https://dev-ykfj37bm.us.auth0.com/authorize' +
             '?response_type=code' +
-            `&code_challenge=yxah08axv4zAWDSuE_TgJtL1MKCG0si7HE3fneAqXRo` +
+            `&code_challenge=${challenge}` +
             '&code_challenge_method=S256' +
             '&client_id=gxrNnJJckTJmeKYTK6GplVtEOJ0Drd9O' +
             '&redirect_uri=https://localhost:5001/auth/redirect' +
