@@ -4,39 +4,57 @@ import {Code, clear} from "../../../store/authSlice";
 import Loader from "../../Loader/Loader";
 import axios from "axios";
 import qs from 'qs';
+import Card from "../../Card/Card";
+import {withRouter} from "react-router";
 
 class Redirect extends React.Component<RedirectProps, RedirectState> {
 
     constructor(props: any) {
         super(props);
 
-        this.state = {
-            isCsrfTokenValid: false
-        }
+        this.state = { } as RedirectState;
     }
 
-    componentDidMount() {
-        const state = localStorage.getItem('state');
-        const codeVerifier = localStorage.getItem('verifier');
+    async componentDidMount() {
         const query = new URLSearchParams(window.location.search);
-        const urlState = query.get('state');
-        const urlCode = query.get('code');
+        const queryUrlState = query.get('state') as string;
+        const queryCode = query.get('code') as string;
 
-        const isCsrfTokenValid = state === urlState;
+        const urlState = localStorage.getItem('state') as string;
+        const isCsrfTokenValid = queryUrlState === urlState;
+
         this.setState({
             ...this.state,
+            verifier: localStorage.getItem('verifier') as string,
+            challenge: localStorage.getItem('challenge') as string,
+            urlState: localStorage.getItem('state') as string,
+            code: queryCode,
             isCsrfTokenValid: isCsrfTokenValid
         });
 
         if (!isCsrfTokenValid) {
-            this.props.clear();
             return;
         }
+    }
 
-        console.log('code_verifier: ' + codeVerifier);
-        console.log("challenge: " + localStorage.getItem('challenge'));
-        console.log('code: ' + urlCode)
+    render() {
+        const content = (
+            <React.Fragment>
+                <h3>Redirect for authorization code</h3>
+                <Card title={'Code verifier'} text={this.state.verifier}/>
+                <Card title={'Code challenge'} text={this.state.challenge}/>
+                <Card title={'State/nonce/CSRF token'} text={this.state.urlState}/>
 
+                <button className="btn btn-primary" onClick={this.onContinueClick}>Continue</button>
+            </React.Fragment>
+        );
+
+        return this.state.isLoading
+            ? <Loader/>
+            : content;
+    }
+
+    private async getTokens(codeVerifier: string, urlCode: string) {
         const data = {
             grant_type: 'authorization_code',
             client_id: 'gxrNnJJckTJmeKYTK6GplVtEOJ0Drd9O',
@@ -52,39 +70,35 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
             data: qs.stringify(data)
         };
 
-        axios.request(options).then((response) => {
-            console.log(response.data);
-        }).catch((error) => {
-            console.log('error from auth0: ' + error);
-        });
+        return await axios.request(options);
     }
 
-    render() {
-        return this.state.isCsrfTokenValid
-            ? <Loader/>
-            : <p>Authentication error</p>;
+    private onContinueClick = async () => {
+        this.setState({
+            ...this.state,
+            isLoading: true
+        });
+
+        const response = await this.getTokens(this.state.verifier, this.state.code);
+
+        localStorage.setItem('accessToken', response.data.access_token);
+        localStorage.setItem('idToken', response.data.id_token);
+
+        this.props.history.push('/auth/tokens')
     }
 }
 
 interface RedirectProps {
-    code: Code,
-    state: string,
-    clear: () => void;
+    history: any
 }
 
 interface RedirectState {
+    isLoading: boolean,
+    verifier: string,
+    challenge: string,
+    urlState: string,
+    code: string,
     isCsrfTokenValid: boolean
 }
 
-const mapStateToProps = (state: any) => {
-    return {
-        code: state.auth.code,
-        state: state.auth.state
-    };
-}
-
-const mapDispatchToProps = {
-    clear
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Redirect)
+export default withRouter(Redirect)
