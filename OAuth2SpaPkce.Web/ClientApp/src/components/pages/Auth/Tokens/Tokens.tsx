@@ -1,5 +1,5 @@
-﻿import React from "react";
-import Card from "../../Card/Card";
+﻿import React from 'react';
+import Card from "../../../common/Card/Card";
 
 export default class Tokens extends React.Component<any, TokenState> {
     constructor(props: any) {

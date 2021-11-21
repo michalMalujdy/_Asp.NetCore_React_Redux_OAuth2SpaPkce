@@ -1,10 +1,9 @@
-﻿import React from "react";
-import {connect} from "react-redux";
-import {setCode, setUrlState} from '../../../store/authSlice';
-import Loader from "../../Loader/Loader";
-import Card from "../../Card/Card";
+﻿import React from 'react';
+import {connect} from 'react-redux';
+import Card from '../../../common/Card/Card';
+import Loader from '../../../common/Loader/Loader';
 
-class Login extends React.PureComponent<any, LoginState> {
+class Login extends React.PureComponent<{}, LoginState> {
     constructor(props: any) {
         super(props);
 

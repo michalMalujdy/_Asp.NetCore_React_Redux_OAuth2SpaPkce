@@ -1,6 +1,6 @@
-﻿import React from "react";
+﻿import React from 'react';
 
-import "./Card.scss"
+import './Card.scss';
 
 export default class Card extends React.Component<CardProps> {
     render() {

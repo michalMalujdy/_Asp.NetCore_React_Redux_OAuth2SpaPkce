@@ -1,9 +1,9 @@
-﻿import React, {Component} from "react";
-import Loader from "../../Loader/Loader";
-import axios from "axios";
+﻿import React, {Component} from 'react';
+import {withRouter} from 'react-router';
+import axios from 'axios';
 import qs from 'qs';
-import Card from "../../Card/Card";
-import {withRouter} from "react-router";
+import Card from "../../../common/Card/Card";
+import Loader from "../../../common/Loader/Loader";
 
 class Redirect extends Component<RedirectProps, RedirectState> {
 
