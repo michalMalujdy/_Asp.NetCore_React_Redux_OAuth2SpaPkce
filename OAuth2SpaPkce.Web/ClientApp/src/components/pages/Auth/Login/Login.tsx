@@ -1,9 +1,8 @@
 ﻿import React from 'react';
-import {connect} from 'react-redux';
 import Card from '../../../common/Card/Card';
 import Loader from '../../../common/Loader/Loader';
 
-class Login extends React.PureComponent<{}, LoginState> {
+export default class Login extends React.PureComponent<{}, LoginState> {
     constructor(props: any) {
         super(props);
 
@@ -111,14 +110,3 @@ interface LoginState {
     challenge: string,
     urlState: string
 }
-
-const mapStateToProps = (_: any) => {
-    return {}
-};
-
-const mapDispatchToProps = {
-    setCode,
-    setUrlState
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
