@@ -23,14 +23,14 @@ export default class Login extends React.PureComponent<{}, LoginState> {
         });
     }
 
-    private setLocalStorage(verifier: string, challenge: string, state: string) {
-        localStorage.setItem('verifier', verifier);
-        localStorage.setItem('challenge', challenge);
-        localStorage.setItem('state', state);
+    render() {
+        return this.state.isLoading
+            ? <Loader/>
+            : this.getContent();
     }
 
-    render() {
-        const content = (
+    private getContent = () => {
+        return (
             <React.Fragment>
                 <h3>Redirect for authorization code</h3>
                 <p>It's the beginning of the flow. Code verifier and code challenge are generated. Those two variables are the most important part of the PKCE extension of the flow. Now the user need to be redirected to the prepared URL to obtain the code grant, which will be exchanged for the tokens later. Additionally for PKCE we must include the code challenge in the URL that will be verified by the Authorization Server later.</p>
@@ -42,10 +42,6 @@ export default class Login extends React.PureComponent<{}, LoginState> {
                 <button className="btn btn-primary" onClick={this.onContinueClick}>Continue</button>
             </React.Fragment>
         );
-
-        return this.state.isLoading
-            ? <Loader/>
-            : content;
     }
 
     private getStrongRandomValue = (): string => {
@@ -92,6 +88,12 @@ export default class Login extends React.PureComponent<{}, LoginState> {
             '&scope=openid email' +
             '&audience=https://dev-ykfj37bm.us.auth0.com/api/v2/' +
             `&state=${this.state.urlState}`;
+    }
+
+    private setLocalStorage(verifier: string, challenge: string, state: string) {
+        localStorage.setItem('verifier', verifier);
+        localStorage.setItem('challenge', challenge);
+        localStorage.setItem('state', state);
     }
 
     private onContinueClick = () => {

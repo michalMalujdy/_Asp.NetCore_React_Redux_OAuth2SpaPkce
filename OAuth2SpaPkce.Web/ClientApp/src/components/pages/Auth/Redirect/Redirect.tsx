@@ -63,14 +63,14 @@ class Redirect extends Component<RedirectProps, RedirectState> {
             redirect_uri: 'https://localhost:5001/auth/redirect'
         };
 
-        const options: any = {
+        const config: any = {
             method: 'POST',
             url: 'https://dev-ykfj37bm.us.auth0.com/oauth/token',
             headers: {'content-type': 'application/x-www-form-urlencoded'},
             data: qs.stringify(data)
         };
 
-        return await axios.request(options);
+        return await axios.request(config);
     }
 
     private onContinueClick = async () => {

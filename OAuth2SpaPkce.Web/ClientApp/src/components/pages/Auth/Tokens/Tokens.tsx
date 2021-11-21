@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import Card from "../../../common/Card/Card";
 
-export default class Tokens extends React.Component<any, TokenState> {
+export default class Tokens extends React.Component<{}, TokenState> {
     constructor(props: any) {
         super(props);
 
@@ -23,16 +23,6 @@ export default class Tokens extends React.Component<any, TokenState> {
             </React.Fragment>
         )
     }
-
-    private decodeJwt = (jwt: string) => {
-        const base64Url = jwt.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-
-        return JSON.parse(jsonPayload);
-    };
 
     private onLogoutClick = () => {
         localStorage.removeItem('verifier');
