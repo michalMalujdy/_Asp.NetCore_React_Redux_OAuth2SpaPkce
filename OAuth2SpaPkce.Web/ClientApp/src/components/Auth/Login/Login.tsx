@@ -35,10 +35,11 @@ class Login extends React.PureComponent<any, LoginState> {
         const content = (
             <React.Fragment>
                 <h3>Redirect for authorization code</h3>
+                <p>It's the beginning of the flow. Code verifier and code challenge are generated. Those two variables are the most important part of the PKCE extension of the flow. Now the user need to be redirected to the prepared URL to obtain the code grant, which will be exchanged for the tokens later. Additionally for PKCE we must include the code challenge in the URL that will be verified by the Authorization Server later.</p>
                 <Card title={'Code verifier'} text={this.state.verifier}/>
                 <Card title={'Code challenge'} text={this.state.challenge}/>
                 <Card title={'State/nonce/CSRF token'} text={this.state.urlState}/>
-                <Card title={'URL to Authorization Server'} text={this.getUrl()}/>
+                <Card title={'URL to Authorization Server'} text={this.getLoginUrl()}/>
 
                 <button className="btn btn-primary" onClick={this.onContinueClick}>Continue</button>
             </React.Fragment>
@@ -83,7 +84,7 @@ class Login extends React.PureComponent<any, LoginState> {
         return this.base64UrlEncode(challenge);
     }
 
-    private getUrl = () => {
+    private getLoginUrl = () => {
         return 'https://dev-ykfj37bm.us.auth0.com/authorize' +
             '?response_type=code' +
             `&code_challenge=${this.state.challenge}` +
@@ -101,7 +102,7 @@ class Login extends React.PureComponent<any, LoginState> {
             isLoading: true
         });
 
-        window.location.replace(this.getUrl());
+        window.location.replace(this.getLoginUrl());
     }
 }
 

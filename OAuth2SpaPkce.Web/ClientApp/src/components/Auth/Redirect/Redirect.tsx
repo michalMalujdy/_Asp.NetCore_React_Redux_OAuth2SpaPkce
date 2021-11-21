@@ -1,15 +1,13 @@
-﻿import React from "react";
-import {connect} from "react-redux";
-import {Code, clear} from "../../../store/authSlice";
+﻿import React, {Component} from "react";
 import Loader from "../../Loader/Loader";
 import axios from "axios";
 import qs from 'qs';
 import Card from "../../Card/Card";
 import {withRouter} from "react-router";
 
-class Redirect extends React.Component<RedirectProps, RedirectState> {
+class Redirect extends Component<RedirectProps, RedirectState> {
 
-    constructor(props: any) {
+    constructor(props: RedirectProps) {
         super(props);
 
         this.state = { } as RedirectState;
@@ -38,21 +36,23 @@ class Redirect extends React.Component<RedirectProps, RedirectState> {
     }
 
     render() {
-        const content = (
-            <React.Fragment>
-                <h3>Redirect for authorization code</h3>
-                <Card title={'Code verifier'} text={this.state.verifier}/>
-                <Card title={'Code challenge'} text={this.state.challenge}/>
-                <Card title={'State/nonce/CSRF token'} text={this.state.urlState}/>
-
-                <button className="btn btn-primary" onClick={this.onContinueClick}>Continue</button>
-            </React.Fragment>
-        );
-
         return this.state.isLoading
             ? <Loader/>
-            : content;
+            : this.getContent();
     }
+
+    private getContent = () => (
+        <React.Fragment>
+            <h3>Redirect for authorization code</h3>
+            <p>The authorization went smooth and the authorization code is here. We need to exchange it now for the tokens. Additionaly for PKCE we must include the code verifier to prove our authenticity.</p>
+            <Card title={'Authorization code'} text={this.state.code}/>
+            <Card title={'Code verifier'} text={this.state.verifier}/>
+            <Card title={'Code challenge'} text={this.state.challenge}/>
+            <Card title={'State/nonce/Anti CSRF token'} text={this.state.urlState}/>
+
+            <button className="btn btn-primary" onClick={this.onContinueClick}>Continue</button>
+        </React.Fragment>
+    );
 
     private async getTokens(codeVerifier: string, urlCode: string) {
         const data = {
