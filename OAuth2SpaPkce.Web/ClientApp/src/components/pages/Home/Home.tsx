@@ -1,8 +1,8 @@
 ﻿import React from 'react';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 export default class Home extends React.Component {
-    render() {
+    render = (): JSX.Element => {
         return (
             <div>
                 <p>This is a demo of Single Page Application implementation of Authorization Code flow with PKCE which is a OAuth2 standard, described in much more details in <a target="_blank" href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-01#section-4.1" className="link-primary">the official documentation</a>.</p>

@@ -3,7 +3,7 @@
 import './Card.scss';
 
 export default class Card extends React.Component<CardProps> {
-    render() {
+    render = (): JSX.Element => {
         return(
             <div className="card w-75 app-card">
                 <div className="card-body">

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route } from 'react-router';
+import {Route} from 'react-router';
 import Home from './components/pages/Home/Home';
 import Layout from './components/common/Layout/Layout';
 import Login from './components/pages/Auth/Login/Login';

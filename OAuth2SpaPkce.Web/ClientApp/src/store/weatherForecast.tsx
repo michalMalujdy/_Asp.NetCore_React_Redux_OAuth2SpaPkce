@@ -1,5 +1,4 @@
-﻿// @ts-ignore
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+﻿import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {Forecast} from '../models/forecast';
 
 const initialState: WeatherForecastState = {

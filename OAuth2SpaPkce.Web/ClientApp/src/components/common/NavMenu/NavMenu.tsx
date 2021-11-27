@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { Container, Navbar, NavbarBrand, NavbarToggler } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import {Container, Navbar, NavbarBrand, NavbarToggler} from 'reactstrap';
+import {Link} from 'react-router-dom';
+
 import './NavMenu.css';
 
-export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }> {
+export default class NavMenu extends React.Component<{}, NavMenuState> {
     public state = {
         isOpen: false
     };
 
-    public render() {
+    public render = (): JSX.Element => {
         return (
             <header>
                 <Navbar className="navMenu navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3" light>
@@ -26,4 +27,8 @@ export default class NavMenu extends React.PureComponent<{}, { isOpen: boolean }
             isOpen: !this.state.isOpen
         });
     }
+}
+
+export interface NavMenuState {
+    isOpen: boolean
 }

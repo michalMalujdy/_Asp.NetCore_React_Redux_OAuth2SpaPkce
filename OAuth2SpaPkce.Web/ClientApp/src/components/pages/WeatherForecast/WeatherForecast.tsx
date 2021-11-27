@@ -1,9 +1,9 @@
 ﻿import React from 'react';
 import axios from 'axios';
-import { Forecast } from '../../../models/forecast';
-import { setForecasts } from '../../../store/weatherForecast';
-import { connect } from 'react-redux';
-import { Link } from "react-router-dom";
+import {Forecast} from '../../../models/forecast';
+import {setForecasts} from '../../../store/weatherForecast';
+import {connect} from 'react-redux';
+import {Link} from 'react-router-dom';
 
 class WeatherForecast extends React.Component<WeatherForecastProps, WeatherForecastState> {
 
@@ -17,7 +17,7 @@ class WeatherForecast extends React.Component<WeatherForecastProps, WeatherForec
         }
     }
 
-    async componentDidMount() {
+    componentDidMount = async (): Promise<void> => {
         const config: any = {
             method: 'GET',
             url: this.baseUrl,
@@ -37,17 +37,17 @@ class WeatherForecast extends React.Component<WeatherForecastProps, WeatherForec
         }
     }
 
-    render() {
+    render = (): JSX.Element => {
         return this.state.wasRequestSuccessful
             ? this.renderContent()
             : this.renderUnauthorized();
     }
 
-    private getAuthorizationHeader = () => {
+    private getAuthorizationHeader = (): any => {
         return {'Authorization': `bearer ${localStorage.getItem('accessToken')}`};
     };
 
-    private renderContent = () => {
+    private renderContent = (): JSX.Element => {
         return (
             <React.Fragment>
                 <h3 id="tabelLabel">Weather forecast</h3>
@@ -78,7 +78,7 @@ class WeatherForecast extends React.Component<WeatherForecastProps, WeatherForec
         );
     }
 
-    private renderUnauthorized = () => {
+    private renderUnauthorized = (): JSX.Element => {
         return (
             <React.Fragment>
                 <p>You cannot see the page as you are not logged in. Log in first.</p>
@@ -89,7 +89,7 @@ class WeatherForecast extends React.Component<WeatherForecastProps, WeatherForec
         );
     }
 
-    private onLogoutClick = () => {
+    private onLogoutClick = (): void => {
         localStorage.removeItem('verifier');
         localStorage.removeItem('challenge');
         localStorage.removeItem('state');
@@ -115,7 +115,7 @@ interface WeatherForecastState {
     wasRequestSuccessful: boolean
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: any): any => {
     return {
         forecasts: state.weatherForecast.forecasts
     }
