@@ -1,14 +1,15 @@
 ﻿import React from 'react';
-import Card from "../../../common/Card/Card";
-import {Link} from "react-router-dom";
+import Card from '../../../common/Card/Card';
+import { Link } from 'react-router-dom';
+import authService from "../../../../services/AuthService";
 
 export default class Tokens extends React.Component<{}, TokenState> {
     constructor(props: any) {
         super(props);
 
         this.state = {
-            accessToken: localStorage.getItem('accessToken') as string,
-            idToken: localStorage.getItem('idToken') as string
+            accessToken: authService.getAccessToken(),
+            idToken: authService.getIdToken()
         }
     }
 
