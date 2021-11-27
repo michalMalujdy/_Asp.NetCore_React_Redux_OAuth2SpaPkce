@@ -1,6 +1,6 @@
 ﻿import React from 'react';
 import Card from '../../../common/Card/Card';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import authService from "../../../../services/AuthService";
 
 export default class Tokens extends React.Component<{}, TokenState> {
@@ -13,7 +13,7 @@ export default class Tokens extends React.Component<{}, TokenState> {
         }
     }
 
-    render() {
+    render = (): JSX.Element => {
         return(
             <React.Fragment>
                 <h3>Authentication success</h3>

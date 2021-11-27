@@ -12,7 +12,7 @@ export default class Login extends React.PureComponent<{}, LoginState> {
         } as LoginState;
     }
 
-    async componentDidMount() {
+    componentDidMount = async (): Promise<void> => {
         const verifier = authService.generateVerifier();
         const challenge = await authService.generateChallenge(verifier);
         const urlState = authService.generateState();
@@ -27,13 +27,13 @@ export default class Login extends React.PureComponent<{}, LoginState> {
         });
     }
 
-    render() {
+    render = (): JSX.Element => {
         return this.state.isLoading
             ? <Loader/>
             : this.getContent();
     }
 
-    private getContent = () => {
+    private getContent = (): JSX.Element => {
         return (
             <React.Fragment>
                 <h3>Redirect for authorization code</h3>
@@ -48,7 +48,7 @@ export default class Login extends React.PureComponent<{}, LoginState> {
         );
     }
 
-    private onContinueClick = () => {
+    private onContinueClick = (): void => {
         this.setState({
             ...this.state,
             isLoading: true

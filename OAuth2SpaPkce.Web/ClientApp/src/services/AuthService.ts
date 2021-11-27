@@ -12,36 +12,36 @@ export class AuthService {
 
     public generateVerifier = (): string => {
         return this.getStrongRandomValue();
-    };
+    }
 
     public getVerifier = (): string => {
         return localStorage.getItem(this.verifierStorageKey) as string;
-    };
+    }
 
     public generateChallenge = async (verifier: string): Promise<string> => {
         const challenge = await this.sha256(verifier);
         return this.base64UrlEncode(challenge);
-    };
+    }
 
     public getChallenge = (): string => {
         return localStorage.getItem(this.challengeStorageKey) as string;
-    };
+    }
 
     public generateState = (): string => {
         return this.getStrongRandomValue();
-    };
+    }
 
     public getState = (): string => {
         return localStorage.getItem(this.stateStorageKey) as string;
-    };
+    }
 
     public getCode = (): string => {
         return localStorage.getItem(this.codeStorageKey) as string;
-    };
+    }
 
     public getRedirectUrlState = (): string => {
         return localStorage.getItem(this.redirectUrlStateStorageKey) as string;
-    };
+    }
 
     public isCsrfTokenValid = (): boolean => {
         return !!this.getState() && this.getState() === this.getRedirectUrlState();
@@ -49,19 +49,19 @@ export class AuthService {
 
     public getAccessToken = (): string => {
         return localStorage.getItem(this.accessTokenStorageKey) as string;
-    };
+    }
 
     public getIdToken = (): string => {
         return localStorage.getItem(this.idTokenStorageKey) as string;
-    };
+    }
 
-    public storeCodeFlowData = (verifier: string, challenge: string, state: string) => {
+    public storeCodeFlowData = (verifier: string, challenge: string, state: string): void  => {
         localStorage.setItem(this.verifierStorageKey, verifier);
         localStorage.setItem(this.challengeStorageKey, challenge);
         localStorage.setItem(this.stateStorageKey, state);
-    };
+    }
 
-    public getLoginUrl = () => {
+    public getLoginUrl = (): string => {
         if (!localStorage.getItem(this.verifierStorageKey) && !localStorage.getItem(this.challengeStorageKey)) {
             throw new Error('Generate and store the code flow data first.')
         }
@@ -75,7 +75,7 @@ export class AuthService {
             '&scope=openid email' +
             '&audience=https://dev-ykfj37bm.us.auth0.com/api/v2/' +
             `&state=${localStorage.getItem(this.stateStorageKey)}`;
-    };
+    }
 
     public readCodeFromRedirectUri = (redirectUri: string): void => {
         const query = new URLSearchParams(redirectUri);
@@ -85,9 +85,9 @@ export class AuthService {
 
         const queryUrlState = query.get('state') as string;
         localStorage.setItem(this.redirectUrlStateStorageKey, queryUrlState);
-    };
+    }
 
-    public async requestTokens(urlCode: string) {
+    public requestTokens = async (urlCode: string): Promise<void> => {
         const data = {
             grant_type: 'authorization_code',
             client_id: 'gxrNnJJckTJmeKYTK6GplVtEOJ0Drd9O',
@@ -145,4 +145,4 @@ export class AuthService {
 
 const authService = new AuthService();
 Object.freeze(authService);
-export default  authService;
+export default authService;
