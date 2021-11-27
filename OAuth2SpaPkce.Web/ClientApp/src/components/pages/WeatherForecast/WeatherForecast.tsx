@@ -3,24 +3,51 @@ import axios from 'axios';
 import { Forecast } from '../../../models/forecast';
 import { setForecasts } from '../../../store/weatherForecast';
 import { connect } from 'react-redux';
+import { Link } from "react-router-dom";
 
 class WeatherForecast extends React.Component<WeatherForecastProps, WeatherForecastState> {
 
     private baseUrl: string = '/api/WeatherForecast';
 
+    constructor(props: WeatherForecastProps) {
+        super(props);
+
+        this.state = {
+            wasRequestSuccessful: false
+        }
+    }
+
     async componentDidMount() {
         const config: any = {
             method: 'GET',
             url: this.baseUrl,
-            headers: {'Authorization': `bearer ${localStorage.getItem('accessToken')}`},
+            headers: this.getAuthorizationHeader(),
         };
 
         const response = await axios.request(config);
-        console.log(response);
-        this.props.setForecasts(response.data as Forecast[]);
+        const wasRequestSuccessful = response.status === 200;
+
+        this.setState({
+            ...this.state,
+            wasRequestSuccessful
+        });
+
+        if (wasRequestSuccessful) {
+            this.props.setForecasts(response.data);
+        }
     }
 
     render() {
+        return this.state.wasRequestSuccessful
+            ? this.renderContent()
+            : this.renderUnauthorized();
+    }
+
+    private getAuthorizationHeader = () => {
+        return {'Authorization': `bearer ${localStorage.getItem('accessToken')}`};
+    };
+
+    private renderContent = () => {
         return (
             <React.Fragment>
                 <h3 id="tabelLabel">Weather forecast</h3>
@@ -28,22 +55,54 @@ class WeatherForecast extends React.Component<WeatherForecastProps, WeatherForec
                     <thead>
                     <tr>
                         <th>Date</th>
-                        <th>Temp. (C)</th>
+                        <th>Temperature [C]</th>
                         <th>Summary</th>
                     </tr>
                     </thead>
                     <tbody>
                     {this.props.forecasts.map((forecast: Forecast) =>
-                        <tr key={forecast.date.toString()}>
-                            <td>{forecast.date}</td>
+                        <tr key={forecast.date}>
+                            <td>{new Date(forecast.date).toLocaleDateString('pl-PL')}</td>
                             <td>{forecast.temperatureC}</td>
                             <td>{forecast.summary}</td>
                         </tr>
                     )}
                     </tbody>
                 </table>
+
+                <p>
+                    You can log out to go through the whole process once again.
+                </p>
+                <button className="btn btn-primary" onClick={this.onLogoutClick}>Logout</button>
             </React.Fragment>
         );
+    }
+
+    private renderUnauthorized = () => {
+        return (
+            <React.Fragment>
+                <p>You cannot see the page as you are not logged in. Log in first.</p>
+                <Link to='/'>
+                    <button className="btn btn-primary">Login</button>
+                </Link>
+            </React.Fragment>
+        );
+    }
+
+    private onLogoutClick = () => {
+        localStorage.removeItem('verifier');
+        localStorage.removeItem('challenge');
+        localStorage.removeItem('state');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('idToken');
+
+        window.location.replace(this.getLogoutUrl());
+    }
+
+    private getLogoutUrl = (): string => {
+        return 'https://dev-ykfj37bm.us.auth0.com/v2/logout' +
+            '?client_id=gxrNnJJckTJmeKYTK6GplVtEOJ0Drd9O' +
+            '&returnTo=https://localhost:5001';
     }
 }
 
@@ -53,13 +112,17 @@ interface WeatherForecastProps {
 }
 
 interface WeatherForecastState {
-    forecasts: Forecast[]
+    wasRequestSuccessful: boolean
 }
 
 const mapStateToProps = (state: any) => {
     return {
         forecasts: state.weatherForecast.forecasts
     }
-}
+};
 
-export default connect(mapStateToProps, { setForecasts })(WeatherForecast)
+const mapDispatchToProps = {
+    setForecasts
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(WeatherForecast)

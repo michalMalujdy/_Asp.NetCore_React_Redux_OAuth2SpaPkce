@@ -44,7 +44,7 @@ class Redirect extends Component<RedirectProps, RedirectState> {
     private getContent = () => (
         <React.Fragment>
             <h3>Redirect for authorization code</h3>
-            <p>The authorization went smooth and the authorization code is here. We need to exchange it now for the tokens. Additionaly for PKCE we must include the code verifier to prove our authenticity.</p>
+            <p>The authorization went smoothly and the authorization code is here. We need to exchange it now for the tokens. Additionaly for PKCE we must include the code verifier to prove our authenticity.</p>
             <Card title={'Authorization code'} text={this.state.code}/>
             <Card title={'Code verifier'} text={this.state.verifier}/>
             <Card title={'Code challenge'} text={this.state.challenge}/>

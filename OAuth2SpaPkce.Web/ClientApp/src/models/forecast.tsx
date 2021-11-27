@@ -1,5 +1,5 @@
 ﻿export interface Forecast {
-    date: Date,
+    date: string,
     summary: string,
     temperatureC: number
 }

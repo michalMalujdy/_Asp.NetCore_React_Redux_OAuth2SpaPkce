@@ -1,5 +1,6 @@
 ﻿import React from 'react';
 import Card from "../../../common/Card/Card";
+import {Link} from "react-router-dom";
 
 export default class Tokens extends React.Component<{}, TokenState> {
     constructor(props: any) {
@@ -15,27 +16,15 @@ export default class Tokens extends React.Component<{}, TokenState> {
         return(
             <React.Fragment>
                 <h3>Authentication success</h3>
-                <p>The whole authentication process is done - we got the access_token and the id_token. You can logout to go through the process again.</p>
+                <p>Now you are fully logged in and the whole authentication process is done - we got the access_token and the id_token. They will be stored in the local storage and they will be used each time a request to the API is made. This means you can proceed and access the next weather forecast page which is accessbile to logged in users only.</p>
                 <Card title={'access_token'} text={this.state.accessToken}/>
                 <Card title={'id_token'} text={this.state.idToken}/>
 
-                <button className="btn btn-primary" onClick={this.onLogoutClick}>Logout</button>
+                <Link to='/weather-forecast'>
+                    <button className="btn btn-primary">Continue</button>
+                </Link>
             </React.Fragment>
         )
-    }
-
-    private onLogoutClick = () => {
-        localStorage.removeItem('verifier');
-        localStorage.removeItem('challenge');
-        localStorage.removeItem('state');
-
-        window.location.replace(this.getLogoutUrl());
-    }
-
-    private getLogoutUrl = (): string => {
-        return 'https://dev-ykfj37bm.us.auth0.com/v2/logout' +
-            '?client_id=gxrNnJJckTJmeKYTK6GplVtEOJ0Drd9O' +
-            '&returnTo=https://localhost:5001';
     }
 }
 
