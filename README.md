@@ -6,8 +6,6 @@
 <p>Auth0 was chosen as the Authorization Server as it's well documented and allows a free tier for low-traffic applications.</p>
 
 ## Demo
-
-### Multiple projects
 [![Demo - multiple projects](https://i.ibb.co/hHDwKfr/demo.jpg)](https://www.youtube.com/watch?v=9Ilk6oIy8ac "Demo")
 
 ## Live demo
