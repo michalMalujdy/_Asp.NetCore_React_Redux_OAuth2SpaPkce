@@ -4,20 +4,36 @@ import {Forecast} from '../../../models/forecast';
 import {setForecasts} from '../../../store/weatherForecast';
 import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
+import Loader from '../../common/Loader/Loader';
 
 class WeatherForecast extends React.Component<WeatherForecastProps, WeatherForecastState> {
 
-    private baseUrl: string = '/api/WeatherForecast';
+    private baseUrl: string = '/api/weather-forecast';
 
     constructor(props: WeatherForecastProps) {
         super(props);
 
         this.state = {
+            isLoading: true,
             wasRequestSuccessful: false
         }
     }
 
     componentDidMount = async (): Promise<void> => {
+        await this.getForecast();
+    }
+
+    render = (): JSX.Element => {
+        if (this.state.isLoading) {
+            return <Loader/>
+        }
+
+        return this.state.wasRequestSuccessful
+            ? this.renderContent()
+            : this.renderUnauthorized();
+    }
+
+    private getForecast = async (): Promise<void> => {
         const config: any = {
             method: 'GET',
             url: this.baseUrl,
@@ -29,18 +45,13 @@ class WeatherForecast extends React.Component<WeatherForecastProps, WeatherForec
 
         this.setState({
             ...this.state,
+            isLoading: false,
             wasRequestSuccessful
         });
 
         if (wasRequestSuccessful) {
             this.props.setForecasts(response.data);
         }
-    }
-
-    render = (): JSX.Element => {
-        return this.state.wasRequestSuccessful
-            ? this.renderContent()
-            : this.renderUnauthorized();
     }
 
     private getAuthorizationHeader = (): any => {
@@ -112,6 +123,7 @@ interface WeatherForecastProps {
 }
 
 interface WeatherForecastState {
+    isLoading: boolean,
     wasRequestSuccessful: boolean
 }
 
